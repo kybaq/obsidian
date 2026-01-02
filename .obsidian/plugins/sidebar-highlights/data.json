@@ -1,0 +1,76 @@
+{
+  "settingsVersion": "1.14.0",
+  "highlightColor": "#ffd700",
+  "sidebarPosition": "right",
+  "highlights": {
+    "work/clublive/docs/DCL-1224/(DCL-1224) 클라 방통위 권고사항.md": [
+      {
+        "id": "1oxpboa81",
+        "text": "'신고하기' 가 아닌 '관계 법령' 사항",
+        "tags": [],
+        "line": 32,
+        "startOffset": 600,
+        "endOffset": 626,
+        "filePath": "work/clublive/docs/DCL-1224/(DCL-1224) 클라 방통위 권고사항.md",
+        "footnoteCount": 1,
+        "footnoteContents": [
+          "검색 결과에 관계 법령을 보여주는 방식"
+        ],
+        "createdAt": 1767329964604,
+        "isNativeComment": false,
+        "type": "highlight"
+      }
+    ]
+  },
+  "collections": {},
+  "groupingMode": "none",
+  "taskSecondaryGroupingMode": "none",
+  "sortMode": "none",
+  "tabSettings": {},
+  "showFilenames": true,
+  "showTimestamps": true,
+  "showHighlightActions": true,
+  "showToolbar": true,
+  "autoToggleFold": false,
+  "useInlineFootnotes": false,
+  "selectTextOnCommentClick": false,
+  "excludeExcalidraw": true,
+  "excludedFiles": [],
+  "fileFilters": [],
+  "fileFilterMode": "exclude",
+  "dateFormat": "YYYY-MM-DD HH:mm",
+  "minimumCharacterCount": 0,
+  "highlightFontSize": 11,
+  "detailsFontSize": 11,
+  "commentFontSize": 11,
+  "highlightFontWeight": 400,
+  "taskFontWeight": 400,
+  "detectHtmlComments": false,
+  "detectAdjacentNativeComments": true,
+  "customPatterns": [],
+  "customColors": {
+    "yellow": "#ffd700",
+    "red": "#ff6b6b",
+    "teal": "#4ecdc4",
+    "blue": "#45b7d1",
+    "green": "#96ceb4"
+  },
+  "customColorNames": {
+    "yellow": "",
+    "red": "",
+    "teal": "",
+    "blue": "",
+    "green": ""
+  },
+  "showCurrentNoteTab": true,
+  "showAllNotesTab": true,
+  "showCollectionsTab": true,
+  "showTasksTab": false,
+  "showCompletedTasks": true,
+  "showTaskContext": true,
+  "taskDateFormat": "YYYY-MM-DD",
+  "showCurrentNoteTasksSection": true,
+  "showOnlyCurrentNoteTasks": false,
+  "displayModes": [],
+  "currentDisplayModeId": null
+}
