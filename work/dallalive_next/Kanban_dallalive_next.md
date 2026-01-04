@@ -10,11 +10,13 @@ kanban-plugin: board
 
 ## To-do
 
-- [ ] overlay-kit / radix UI 내용 정리
 
 
 ## In Progress
 
+- [ ] overlay-kit / radix UI 내용 정리
+	- overlay-kit / radix UI 코드
+	- api-collector repo 갱신 / 결과
 
 
 ## Done

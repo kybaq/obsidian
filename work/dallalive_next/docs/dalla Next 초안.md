@@ -110,22 +110,23 @@
 ### 각 route 별 api endpoint 관리 도구
 
 - 링크
-    - [https://github.com/kybaq/har-tool](https://github.com/kybaq/har-tool)
+    - 
 - 도입 의도
     - migration 작업 시, 어떤 페이지에서 어떤 api 를 호출하고 있는지 파악해야 원활한 기능 구현이 가능하다고 판단.
     - json-server 를 통한 mock server 구축 시 필요.
 - 방법
-    - 로컬 환경에서 사용 가능한 proxy 를 구현해, 브라우저에서 발생하는 네트워크 트래픽을 가로채 기록함.
+	- 기존
+		- node.js 기반, [http-mitm-proxy](https://www.npmjs.com/package/http-mitm-proxy) 라는 라이브러리로 해당 port number 로 들어오는 요청을 직접 처리하는 방식.
+	- 개선
+	    - [mitmproxy](https://www.mitmproxy.org/) 이라는 프로그램을 설치해 서버를 띄워 파이썬 스크립트로 네트워크 요청을 기록함
+		- `.har` 포맷으로 저장한 뒤, 이 파일을 불러와서 네트워크 요청을 정리하는 프론트엔드 앱 존재.
+		- 개선한 이유
+			- 기존 node.js 기반 서버에서는 proxy 를 직접 관리하고, 네트워크 요청을 기록하는 것도 직접 관리. 하지만 개선한 방식을 사용하면 보다 쉽게 기록을 관리할 수 있음.
 - 결과
-    
-    ![예시 1](attachment:231d25f3-6bd3-41bd-8383-26e62df624be:image.png)
-    
-    예시 1
-    
-    ![예시 2](attachment:e52b2c7c-7163-42d6-8e59-122eafa55588:image.png)
-    
-    예시 2
-    
+	- 사진
+- 한계
+	- 페이지를 이동해도 제대로 감지가 되지 않아 반드시 새로고침을 해주어야만 페이지를 인식할 수 있는 문제가 있음.
+		- react 기반 때문에 발생하는 문제인지, 다른 문제가 있는 것인지 아직 파악 X.
 
 ## 상태 관리
 
@@ -154,6 +155,88 @@ json server 로 데이터 구조에 맞게 mock server 구현해서 페이지 �
 
 ### 라이브러리 목록
 
+#### overlay-kit & headless ui 기반 라이브러리에 대한 고찰
+
+[overlay-kit](https://overlay-kit.slash.page/ko) 은 React 에서 overlay(기존 화면을 덮어쓰면서 나타나는 요소) 형태의 컴포넌트를 다룰 때 발생하는 문제를 해결해줌
+
+##### [기존 오버레이 관리의 문제점](https://overlay-kit.slash.page/ko/docs/guides/think-in-overlay-kit#기존-오버레이-관리의-문제점)
+
+1. **상태 관리의 복잡성**
+    - `useState`나 전역 상태를 사용해 직접 오버레이 상태를 관리해야 했어요.
+    - 상태 관리와 UI 로직이 섞여 코드가 복잡해지고 가독성이 떨어졌어요.
+2. **이벤트 핸들링의 반복**
+    - 열기, 닫기, 결과 반환 같은 이벤트 핸들링 코드를 반복해서 작성해야 했어요.
+    - 이는 중복 코드를 유발하고 개발 경험을 저하시키는 주요 원인이 되었어요.
+3. **재사용성 부족**
+    - 오버레이에서 값을 반환하려면 callback 함수 등으로 UI와 로직이 강하게 결합되었어요.
+    - 이로 인해 컴포넌트를 재사용하기 어려웠어요.
+
+###### 적용 전
+```tsx
+import { useState } from 'react';
+
+function MyPage() {
+  const [isOpen, setIsOpen] = useState(false);
+  /* 이외의 다른 상태들 */
+  const [count, setCount] = useState(0)
+  return (
+    <>
+      {/* Other components... */}
+      <Button
+        onClick={() => {
+          setIsOpen(true);
+        }}
+      >
+        Open
+      </Button>
+      {/* Other components... */}
+      <Dialog
+        open={isOpen}
+        onClose={() => {
+          setIsOpen(false);
+        }}
+      />
+    </>
+  );
+}
+
+```
+컴포넌트에서 props drilling 방식으로 상태를 전달하거나, 전역상태를 통한 관리(현재 방식)
+
+###### 적용 후
+```tsx
+import { overlay } from 'overlay-kit';
+ 
+function MyPage() {
+  /* Other Hook calls... */
+ 
+  return (
+    <>
+      {/* Other components... */}
+      <Button
+        onClick={() => {
+          overlay.open(({ isOpen, close }) => {
+            return <Dialog open={isOpen} onClose={close} />;
+          });
+        }}
+      >
+        Open
+      </Button>
+    </>
+  );
+}
+```
+전달받은 상태(`isOpen`)을 통해 간단한 관리가 가능하다는 것이 장점.
+
+##### radix ui / base ui 등 라이브러리를 도입한다면 overlay-kit 이 필요할까?
+radix ui 를 임의로 선택하고 overlay 컴포넌트 구현
+
+1. overlay-kit + radix ui
+	1. 코드
+2. radix ui
+	1. 코드
 
 
+달라 메인의 이벤트 안내 오버레이나 이외의 오버레이의 경우, 사용하려고 하는 ui 라이브러리 등에서 `<Dialog.Trigger>` 컴포넌트를 통해 상태를 관리하고 있으며 필요할 경우, `defaultOpen` 을 통한 관리 및 early return 방식을 통해서 충분히 구현이 가능하다고 판단.
 
+이 방식으로 구현이 안되는 경우에만 사용하는 것이 좋다고 생각. 
